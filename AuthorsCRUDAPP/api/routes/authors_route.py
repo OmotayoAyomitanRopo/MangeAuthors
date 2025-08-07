@@ -21,3 +21,25 @@ def create_author():
     except Exception as e:
         logging.error(f"Server error: {e}")
         return response_with(resp.INVALID_INPUT_422)
+
+@author_routes.route('/', methods=['GET'])
+def get_author_list():
+    try:
+        author_fetch = Author.query.all()
+        author_schema = AuthorSchema(many=True, only=['first_name', 'last_name', 'id'])
+        result = author_schema.dump(author_fetch)
+        return response_with(resp.SUCCESS_200, value={"result": result})
+    except Exception as e:
+        logging.error(f"Server error: {e}")
+        return response_with(resp.INVALID_INPUT_422)
+    
+@author_routes.route('<int:author_id>', methods=['GET'])
+def get_authorby_id(author_id):
+    try:
+        fetched = Author.query.get_or_404(author_id)
+        author_schema = AuthorSchema()
+        result = author_schema.dump(fetched)
+        return response_with(resp.SUCCESS_200, value={"result": result})
+    except Exception as e:
+        logging.error(f"server error: {e}")
+        return response_with(resp.INVALID_INPUT_422) 
