@@ -6,7 +6,7 @@ from api.models.books import BookSchema
 class Author(db.Model):
     __tablename__ = 'authors'
 
-    id = db.Column(db.Integer, primary_key=True, authoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(20))
     last_name = db.Column(db.String(20))
     created = db.Column(db.DateTime, server_default=db.func.now())
@@ -27,3 +27,9 @@ class AuthorSchema(SQLAlchemyAutoSchema):
         model = Author
         sqla_session = db.session
         load_instance = True
+
+id = fields.Number(dump_only=True)
+first_name = fields.String(required=True)
+last_name = fields.String(required=True)
+created = fields.String(dump_only=True)
+books = fields.Nested(BookSchema, many=True, only=['title', 'year', 'id'])
